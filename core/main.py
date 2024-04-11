@@ -167,7 +167,7 @@ def test(actor, critic, val_data, noRL=False):
 
 
 if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.ERROR)
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     argv = sys.argv[1:]
     args, _ = Parser().getParser().parse_known_args(argv)
@@ -191,22 +191,22 @@ if __name__ == '__main__':
     print("dev_data", len(dev_data))
     ###
 
-    config = tf.ConfigProto()
+    config = tf.compat.v1.ConfigProto()
     config.gpu_options.allow_growth = True
-    with tf.Session(config=config) as sess:
+    with tf.compat.v1.Session(config=config) as sess:
         # Actor-Critic model
         critic = SelfAttentionNet(sess, args.dim, args.optimizer, args.lr, args.tau, args.grained, args.maxlenth,
                         args.dropout, word_vector, logger)
         actor = PolicyNet(sess, args.maxlenth, args.dim, args.optimizer, args.lr, args.tau, logger)
 
-        sess.run(tf.initialize_local_variables())
-        sess.run(tf.global_variables_initializer())
+        sess.run(tf.compat.v1.initialize_local_variables())
+        sess.run(tf.compat.v1.global_variables_initializer())
         ###############################
 
         print('*' * 50)
         logger.info('*' * 50)
 
-        for item in tf.trainable_variables():
+        for item in tf.compat.v1.trainable_variables():
             print(item.name, item.get_shape())
             logger.info(item.name + str(item.get_shape()))
 
@@ -217,7 +217,7 @@ if __name__ == '__main__':
         logger.info('num_trainable_vars:' + str(num_trainable_vars_len))
         logger.info('num_other_variables:' + str(num_other_variables_len))
 
-        saver = tf.train.Saver()
+        saver = tf.compat.v1.train.Saver()
         print('*' * 50)
         logger.info('*' * 50)
 
